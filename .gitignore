@@ -9,10 +9,7 @@ base_spacer_1-5mm.stp
 base_spacer_1-65mm.stp
 base_spacer_1-8mm.stp
 
-turret_manual
-Makefile
-CMakeCache.txt
-CMakeFiles/
+build/
 
 # Prerequisites
 *.d
