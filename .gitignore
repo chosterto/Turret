@@ -10,6 +10,10 @@ base_spacer_1-65mm.stp
 base_spacer_1-8mm.stp
 
 build/
+build_cv/
+WiringPi/
+opencv/
+opencv_contrib/
 
 # Prerequisites
 *.d

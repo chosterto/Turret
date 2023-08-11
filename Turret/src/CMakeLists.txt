@@ -9,8 +9,13 @@ if (UNIX AND NOT APPLE)
 		#test.cpp
 		manual_keyboard.cpp
 		servo.cpp
+		camera.cpp
 		)
 
 	find_library(WIRINGPI_LIBS NAMES wiringPi)
-	target_link_libraries(turret_manual ${WIRINGPI_LIBS})
+
+	find_package(OpenCV REQUIRED)
+	include_directories(${OpenCV_INCLUDE_DIRS})
+
+	target_link_libraries(turret_manual ${WIRINGPI_LIBS} ${OpenCV_LIBS})
 endif()
