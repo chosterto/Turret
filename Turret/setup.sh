@@ -5,6 +5,17 @@
 
 read -p "Delete source repos when finished? (y:n) " delete
 
+echo "Installing dependencies"
+echo "-------------------------------------------"
+# GUI and dev tools
+apt install libgtk2.0-dev pkg-config
+# Photo/Video processing
+apt install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev
+apt install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+apt install libxvidcore-dev libx264-dev
+# Optimization packages
+apt install libatlas-base-dev gfortran
+
 echo "Fetching repositories"
 echo "-------------------------------------------"
 if [ ! -d WiringPi ]; then
