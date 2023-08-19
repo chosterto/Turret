@@ -31,21 +31,21 @@ OPENCV_CONTRIB_DIR=$(echo $(find $HOME -type d -name "opencv_contrib") | cut -d 
 
 if [ ! $WIRING_PI_DIR ]; then
 	git clone https://github.com/WiringPi/WiringPi.git
-	WIRING_PI_DIR=$PWD
+	WIRING_PI_DIR=$PWD/WiringPi
 else
 	echo "Found WiringPi at $WIRING_PI_DIR"
 fi
 
 if [ ! $OPENCV_DIR ]; then
 	git clone --branch 3.4 https://github.com/opencv/opencv.git
-	OPENCV_DIR=$PWD
+	OPENCV_DIR=$PWD/opencv
 else
 	echo "Found opencv at $OPENCV_DIR"
 fi
 
 if [ ! $OPENCV_CONTRIB_DIR ]; then
 	git clone --branch 3.4 https://github.com/opencv/opencv_contrib.git
-	OPENCV_CONTRIB_DIR=$PWD
+	OPENCV_CONTRIB_DIR=$PWD/opencv_contrib
 else
 	echo "Found opencv_contrib at $OPENCV_CONTRIB_DIR"
 fi
@@ -65,14 +65,13 @@ CMAKE_FLAGS="-D WITH_OPENCL=OFF \
 	-D PYTHON3_INCLUDE_DIR=/usr/include/python3.9 \
 	-DOPENCV_EXTRA_MODULES_PATH=$OPENCV_CONTRIB_DIR/modules"
 cmake $CMAKE_FLAGS ../opencv
-make -j1
-sudo make install
+sudo make -j1 install
 echo "-------------------------------------------"
 echo "BUILDS DONE"
 echo "-------------------------------------------"
 cd ..
 
-if [$delete = "y"]; then
+if [ $delete = "y" ]; then
 	echo "Removing WiringPi"
 	rm -rf $WIRING_PI_DIR
 	echo "Removing OpenCV"

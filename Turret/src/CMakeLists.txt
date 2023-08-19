@@ -9,6 +9,11 @@ if (UNIX AND NOT APPLE)
 		#test.cpp
 		manual_keyboard.cpp
 		servo.cpp
+		)
+	add_executable(
+		turret_auto
+		auto_tracker.cpp
+		servo.cpp
 		camera.cpp
 		)
 
@@ -18,4 +23,5 @@ if (UNIX AND NOT APPLE)
 	include_directories(${OpenCV_INCLUDE_DIRS})
 
 	target_link_libraries(turret_manual ${WIRINGPI_LIBS} ${OpenCV_LIBS})
+	target_link_libraries(turret_auto ${WIRINGPI_LIBS} ${OpenCV_LIBS})
 endif()
