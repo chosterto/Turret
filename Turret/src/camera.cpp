@@ -23,7 +23,28 @@ void inRangeHSVPercent(cv::Mat* img, cv::Scalar s1, cv::Scalar s2)
 	s2[1] = scale(s2[1], 0, 100, 0, 255);
 	s2[2] = scale(s2[2], 0, 100, 0, 255);
 
-	cv::inRange(*img, s1, s2, *img);
+	inRange(*img, s1, s2, *img);
+}
+
+
+uint16_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours)
+{
+	cv::findContours(img, *contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+	uint16_t largest_idx;
+
+	double area, largest_contour;
+
+	for (uint16_t i = 0; i < contours->size(); i++)
+	{
+		area = cv::contourArea(contours->at(i));
+		if (largest_contour < area)
+		{
+			largest_contour = area;
+			largest_idx = i;
+		}
+	}
+
+	return largest_idx;
 }
 
 
