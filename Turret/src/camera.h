@@ -10,7 +10,10 @@
 #include <stdint.h>
 #include <vector>
 
+#define CENTER cv::Point(320, 240)
+
 using namespace std;
+
 
 uint16_t scale(
 	uint16_t in,
@@ -22,6 +25,10 @@ uint16_t scale(
 
 void inRangeHSVPercent(cv::Mat* img, cv::Scalar s1, cv::Scalar s2);
 
+
 uint16_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours);
+
+
+bool distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points);
 
 #endif
