@@ -22,6 +22,6 @@ if (UNIX AND NOT APPLE)
 	find_package(OpenCV REQUIRED)
 	include_directories(${OpenCV_INCLUDE_DIRS})
 
-	target_link_libraries(turret_manual ${WIRINGPI_LIBS} ${OpenCV_LIBS})
+	target_link_libraries(turret_manual ${WIRINGPI_LIBS})
 	target_link_libraries(turret_auto ${WIRINGPI_LIBS} ${OpenCV_LIBS})
 endif()

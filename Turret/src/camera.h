@@ -26,9 +26,9 @@ uint16_t scale(
 void inRangeHSVPercent(cv::Mat* img, cv::Scalar s1, cv::Scalar s2);
 
 
-uint16_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours);
+int32_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours);
 
 
-bool distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points);
+void distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points);
 
 #endif

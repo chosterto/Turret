@@ -27,14 +27,14 @@ void inRangeHSVPercent(cv::Mat* img, cv::Scalar s1, cv::Scalar s2)
 }
 
 
-uint16_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours)
+int32_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours)
 {
 	cv::findContours(img, *contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-	uint16_t largest_idx = 0;
+	int32_t largest_idx = -1;
 
 	double area, largest_contour = 0;
 
-	for (uint16_t i = 0; i < contours->size(); i++)
+	for (int32_t i = 0; i < contours->size(); i++)
 	{
 		area = cv::contourArea(contours->at(i));
 		if (largest_contour < area)
@@ -48,12 +48,10 @@ uint16_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* con
 }
 
 
-bool distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points)
+void distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points)
 {
 	cv::Point centroid(0.0, 0.0);
 	uint16_t n = points.size();
-
-	if (n == 0) return 0;
 
 	for (uint16_t i = 0; i < n; i++)
 		centroid += points[i];
@@ -61,6 +59,4 @@ bool distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points)
 	centroid /= n;
 
 	*distance = (CENTER - centroid);
-
-	return 1;
 }
