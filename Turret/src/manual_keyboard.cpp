@@ -60,10 +60,10 @@ int main(void)
 		switch(ch)
 		{
 			case KEY_W:
-				setPower(&servo_2, 0.5);
+				setPower(&servo_2, -0.5);
 				break;
 			case KEY_S:
-				setPower(&servo_2, -0.5);
+				setPower(&servo_2, 0.5);
 				break;
 			case KEY_A:
 				setPower(&servo_1, 0.75);
