@@ -24,9 +24,21 @@ typedef struct ServoCR {
 
 } ServoCR;
 
+typedef struct PID {
+	double K_p,
+		   K_i,
+		   K_d,
+		   time_prev = 0.0,
+		   prev = 0.0,
+		   sum = 0.0;
+} PID;
+
+
+// PID feedback controller
+void computePID(double error, double* output, double time, PID* pid);
+
 // encoder callback function
 void enc1_callback(void);
-
 
 // percent output, from -1.0 to 1.0
 void setPower(ServoCR* servo, double pOut);
@@ -36,8 +48,5 @@ void setPWMPulse(ServoCR* servo, uint8_t pulse_);
 
 // servo1 is for base, servo2 is shaft
 void servoInitialize(ServoCR* servo1, ServoCR* servo2, uint8_t nPulse1, uint8_t nPulse2);
-
-// set position (encoder pulses) of a servo
-void setEncPos(ServoCR* servo, int pos);
 
 #endif

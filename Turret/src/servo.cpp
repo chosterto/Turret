@@ -19,6 +19,24 @@ void enc1_callback(void)
 }
 
 
+void computePID(double error, double* output, double time, PID* pid) {
+	double s1, s2, s3, dt;
+
+	dt = (time) - (pid->time_prev);
+
+	s1 = error;
+
+	pid->sum += error * dt;
+	s2 = (pid->sum);
+
+	s3 = (error - pid->prev) / dt;
+
+	*output = (pid->K_p)*s1 + (pid->K_i)*s2 + (pid->K_d)*s3;
+	pid->time_prev =  time;
+	pid->prev = error;
+}
+
+
 void servoInitialize(ServoCR* servo1, ServoCR* servo2, uint8_t nPulse1, uint8_t nPulse2)
 {
 	servo1->pin = SERVO_1;
@@ -73,23 +91,3 @@ void setPWMPulse(ServoCR* servo, uint8_t pulse_)
 	pwmWrite(servo->pin, pulse_);
 }
 
-
-void setEncPos(ServoCR* servo, int pos)
-{
-	int error;
-	double speed;
-
-	error = (pos - servo->enc_ticks);
-
-	while (std::abs(error) > 2)
-	{
-		// calculate distance between current and target position
-		error = (pos - servo->enc_ticks);
-		// scale down and set power
-		speed = error * 0.05;
-		setPower(servo, speed);
-		delay(1);
-	}
-	// stop motor
-	setPower(servo, 0.0);
-}
