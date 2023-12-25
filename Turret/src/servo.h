@@ -26,11 +26,10 @@ typedef struct ServoCR {
 
 typedef struct PID {
 	double K_p,
-		   K_i,
-		   K_d,
-		   time_prev = 0.0,
-		   prev = 0.0,
-		   sum = 0.0;
+	       K_i,
+	       K_d,
+	       prev = 0.0,
+	       sum = 0.0;
 } PID;
 
 

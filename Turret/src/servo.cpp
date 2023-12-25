@@ -19,10 +19,8 @@ void enc1_callback(void)
 }
 
 
-void computePID(double error, double* output, double time, PID* pid) {
-	double s1, s2, s3, dt;
-
-	dt = (time) - (pid->time_prev);
+void computePID(double error, double* output, double dt, PID* pid) {
+	double s1, s2, s3;
 
 	s1 = error;
 
@@ -32,7 +30,6 @@ void computePID(double error, double* output, double time, PID* pid) {
 	s3 = (error - pid->prev) / dt;
 
 	*output = (pid->K_p)*s1 + (pid->K_i)*s2 + (pid->K_d)*s3;
-	pid->time_prev =  time;
 	pid->prev = error;
 }
 
