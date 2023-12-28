@@ -19,7 +19,7 @@ void enc1_callback(void)
 }
 
 
-void computePID(double error, double* output, double dt, PID* pid) {
+void computePID(double error, double* output, double dt, PID* pid, double thres) {
 	double s1, s2, s3;
 
 	s1 = error;
@@ -30,6 +30,10 @@ void computePID(double error, double* output, double dt, PID* pid) {
 	s3 = (error - pid->prev) / dt;
 
 	*output = (pid->K_p)*s1 + (pid->K_i)*s2 + (pid->K_d)*s3;
+	if (*output > thres)
+		*output = thres;
+	else if (*output < -thres)
+		*output = -thres;
 	pid->prev = error;
 }
 

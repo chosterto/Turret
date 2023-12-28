@@ -34,7 +34,7 @@ typedef struct PID {
 
 
 // PID feedback controller
-void computePID(double error, double* output, double dt, PID* pid);
+void computePID(double error, double* output, double dt, PID* pid, double thres);
 
 // encoder callback function
 void enc1_callback(void);

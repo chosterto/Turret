@@ -32,7 +32,7 @@ int32_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* cont
 	cv::findContours(img, *contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 	int32_t largest_idx = -1;
 
-	double area, largest_contour = 0;
+	double area, largest_contour = 30;
 
 	for (int32_t i = 0; i < contours->size(); i++)
 	{
