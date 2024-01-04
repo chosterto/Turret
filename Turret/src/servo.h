@@ -12,7 +12,7 @@
 
 #define ZERO_PULSE 150
 
-#define TICKS_PER_REV (24 * 2)
+#define TICKS_PER_REV (24 * 3)
 
 
 typedef struct ServoCR {

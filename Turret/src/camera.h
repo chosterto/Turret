@@ -12,6 +12,7 @@
 #include <vector>
 
 #define CENTER cv::Point(320, 240)
+#define CAMERA_PERIOD_SEC 0.03333
 
 using namespace std;
 

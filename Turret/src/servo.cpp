@@ -8,6 +8,8 @@ ServoCR* servo_p;
 
 void enc1_callback(void)
 {
+	if (digitalRead(ENCODER) == LOW) return;
+
 	if ( (servo_p->pulse) > (servo_p->neutral_pulse) )
 	{
 		(servo_p->enc_ticks)++;
@@ -20,16 +22,16 @@ void enc1_callback(void)
 
 
 void computePID(double error, double* output, double dt, PID* pid, double thres) {
-	double s1, s2, s3;
+	double P, I, D;
 
-	s1 = error;
+	P = (pid->K_p) * error;
 
 	pid->sum += error * dt;
-	s2 = (pid->sum);
+	I = (pid->K_i) * (pid->sum);
 
-	s3 = (error - pid->prev) / dt;
+	D = (pid->K_d) * (error - pid->prev) / dt;
 
-	*output = (pid->K_p)*s1 + (pid->K_i)*s2 + (pid->K_d)*s3;
+	*output = P + I + D;
 	if (*output > thres)
 		*output = thres;
 	else if (*output < -thres)
