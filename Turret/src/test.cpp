@@ -12,7 +12,6 @@ int main(void)
 	servoInitialize(&test_servo, &test_servo2, 150, 150);
 
 	// servo testing
-	setEncPos(&test_servo, 48);
 	//setPower(&test_servo, 0.25);
 	//while (1)
 	//{
@@ -20,16 +19,16 @@ int main(void)
 	//	delay(10);
 	//}
 
-	//setPower(&test_servo, 0.5);
-	//delay(2000);
+	setPower(&test_servo, 0.5);
+	delay(1000);
 
-	//setPower(&test_servo, 0.2);
+	setPower(&test_servo, -0.5);
 
-	//delay(2000);
+	delay(1000);
 
-	//setPower(&test_servo, 0.0);
+	setPower(&test_servo, 0.0);
 
-	//delay(2000);
+	delay(2000);
 
 	//setPower(&test_servo, -1.0);
 

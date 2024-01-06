@@ -17,6 +17,12 @@
 using namespace std;
 
 
+typedef struct Aruco {
+
+	uint16_t size;
+
+} Aruco;
+
 uint16_t scale(
 	uint16_t in,
 	uint16_t min,
@@ -25,12 +31,18 @@ uint16_t scale(
 	uint16_t max_prime);
 
 
-void inRangeHSVPercent(cv::Mat* img, cv::Scalar s1, cv::Scalar s2);
+void inRangeHSVPercent(cv::Mat* img, cv::Scalar s1, cv::Scalar s2, cv::Mat* img2);
 
 
 int32_t findLargestContour(const cv::Mat& img, vector< vector<cv::Point> >* contours);
 
 
 void distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points);
+
+
+void findArUco(const cv::Mat& img, Aruco* aruco);
+
+
+void filterShapes(const vector< vector<cv::Point> >& points, vector< vector<cv::Point> >& candidates);
 
 #endif

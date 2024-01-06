@@ -9,13 +9,19 @@ if (UNIX AND NOT APPLE)
 		#test.cpp
 		manual_keyboard.cpp
 		servo.cpp
-		)
+	)
 	add_executable(
-		turret_auto
-		auto_tracker.cpp
+		turret_color
+		color_track.cpp
 		servo.cpp
 		camera.cpp
-		)
+	)
+	add_executable(
+		turret_aruco
+		aruco_track.cpp
+		servo.cpp
+		camera.cpp
+	)
 
 	find_library(WIRINGPI_LIBS NAMES wiringPi)
 
@@ -23,5 +29,7 @@ if (UNIX AND NOT APPLE)
 	include_directories(${OpenCV_INCLUDE_DIRS})
 
 	target_link_libraries(turret_manual ${WIRINGPI_LIBS})
-	target_link_libraries(turret_auto ${WIRINGPI_LIBS} ${OpenCV_LIBS})
+	target_link_libraries(turret_color ${WIRINGPI_LIBS} ${OpenCV_LIBS})
+	target_link_libraries(turret_aruco ${WIRINGPI_LIBS} ${OpenCV_LIBS})
+
 endif()
