@@ -11,6 +11,7 @@ PID pid2 = {.K_p=-0.001, .K_i=-0.0001, .K_d=0.0};
 
 Aruco marker;
 
+
 void terminate(int s)
 {
 	cout << "\nSTOPPING MOTORS" << endl;
@@ -51,7 +52,11 @@ int main(int argc, char** argv)
 	}
 
 	delay(1000);
-
+	marker.size = 4;
+	marker.dim = 360.0;
+	marker.searchRegionPercent = 0.3;
+	marker.maxBlack = 110;
+	marker.minWhite = 140;
 	cap.read(raw_frame);
 	findArUco(raw_frame, &marker);
 	/**

@@ -91,17 +91,30 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 
 	uint16_t i;
 	cv::Point TL, TR, BL, BR;
+	cv::Mat p_mat, marker_img;
 	for (i = 0; i < potential_markers.size(); i++)
 	{
 		orderCorners(potential_markers[i], &TL, &TR, &BL, &BR);
-		cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
-		cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
-		cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
-		cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
 
+		cv::Point2f corners[4] = {TL, TR, BL, BR};
+		cv::Point2f target[4] = {
+			cv::Point(0, 0),
+			cv::Point(aruco->dim, 0),
+			cv::Point(0, aruco->dim),
+			cv::Point(aruco->dim, aruco->dim)
+		};
+
+		p_mat = cv::getPerspectiveTransform(corners, target);
+
+		cv::warpPerspective(gs, marker_img, p_mat, cv::Size(aruco->dim, aruco->dim));
+		//cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
+		//cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
+		//cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
+		//cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
+		//cv::imshow("img", marker_img);
+		//cv::waitKey(0);
+		verifyMarker(marker_img, aruco);
 	}
-	cv::imshow("img", img);
-	cv::waitKey(0);
 }
 
 
@@ -139,4 +152,34 @@ void orderCorners(const vector<cv::Point>& p,
 }
 
 
+bool verifyMarker(const cv::Mat& img, Aruco* aruco)
+{
+	cv::Mat bits(aruco->size, aruco->size, CV_8U), region;
+
+	uint16_t bitSize = (aruco->dim)/(aruco->size + 2);
+	double   avg;
+
+	for (uint8_t i = 0; i < (aruco->size)*(aruco->size); i++)
+	{
+		cv::Point p1(bitSize*(i%aruco->size+1) + bitSize/2 * (1-aruco->searchRegionPercent),
+			     bitSize*(i/aruco->size+1) + bitSize/2 * (1-aruco->searchRegionPercent));
+		cv::Point p2(bitSize*(i%aruco->size+1) + bitSize/2 * (1+aruco->searchRegionPercent),
+			     bitSize*(i/aruco->size+1) + bitSize/2 * (1+aruco->searchRegionPercent));
+		cv::rectangle(img, p1,p2, cv::Scalar(255,0,0), 2);
+
+		region = img(cv::Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y));
+		avg = cv::mean(region)[0];
+
+		if (avg < aruco->maxBlack)
+			bits.at<uint8_t>(i/aruco->size, i%aruco->size) = 0;
+		else if (avg > aruco->minWhite)
+			bits.at<uint8_t>(i/aruco->size, i%aruco->size) = 1;
+		else
+			return false;
+	}
+	cout << bits << endl;
+	cv::imshow("img", img);
+	cv::waitKey(0);
+	return true;
+}
 
