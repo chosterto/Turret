@@ -19,7 +19,7 @@ using namespace std;
 
 typedef struct Aruco {
 
-	uint16_t size;
+	uint8_t size;
 
 } Aruco;
 
@@ -43,6 +43,9 @@ void distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points);
 void findArUco(const cv::Mat& img, Aruco* aruco);
 
 
-void filterShapes(const vector< vector<cv::Point> >& points, vector< vector<cv::Point> >& candidates);
+void filterPoly(const vector< vector<cv::Point> >& points, vector< vector<cv::Point> >& candidates);
 
+
+void orderCorners(const vector<cv::Point>& p, cv::Point* tl, cv::Point* tr, cv::Point* bl, cv::Point* br);
+ 
 #endif

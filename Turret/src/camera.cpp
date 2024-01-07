@@ -64,6 +64,21 @@ void distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points)
 
 void findArUco(const cv::Mat& img, Aruco* aruco)
 {
+	uint8_t marker_size;
+	switch(aruco->size)
+	{
+		case 4:
+			marker_size = cv::aruco::DICT_4X4_250; break;
+		case 5:
+			marker_size = cv::aruco::DICT_5X5_250; break;
+		case 6:
+			marker_size = cv::aruco::DICT_6X6_250; break;
+		case 7:
+			marker_size = cv::aruco::DICT_7X7_250; break;
+		default:
+			marker_size = cv::aruco::DICT_4X4_250; break;
+	}
+
 	cv::Mat thres, gs;
 	cv::cvtColor(img, gs, cv::COLOR_BGR2GRAY);
 	cv::adaptiveThreshold(
@@ -71,30 +86,57 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 	);
 
 	vector< vector<cv::Point> > contours, potential_markers;
-
 	cv::findContours(thres, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+	filterPoly(contours, potential_markers);
 
-	filterShapes(contours, potential_markers);
+	uint16_t i;
+	cv::Point TL, TR, BL, BR;
+	for (i = 0; i < potential_markers.size(); i++)
+	{
+		orderCorners(potential_markers[i], &TL, &TR, &BL, &BR);
+		cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
+		cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
+		cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
+		cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
 
-	for (int i = 0; i < potential_markers.size(); i++) {
-		for (int j = 0; j < 4; j++)
-			cv::circle(img, potential_markers[i][j], 4, cv::Scalar(255, 0, 0), 2);
 	}
 	cv::imshow("img", img);
 	cv::waitKey(0);
 }
 
 
-void filterShapes(const vector< vector<cv::Point> >& points, vector< vector<cv::Point> >& candidates)
+void filterPoly(const vector< vector<cv::Point> >& points, vector< vector<cv::Point> >& candidates)
 {
 	vector<cv::Point> curve_f;
 	double ep = 1.5;
 	for (uint16_t i = 0; i < points.size(); i++)
 	{
-		if (cv::contourArea(points[i]) < 30) continue;
+		if (cv::contourArea(points[i]) < 50) continue;
 
 		cv::approxPolyDP(points[i], curve_f, ep, true);
 		if (curve_f.size() == 4)
 			candidates.push_back(curve_f);
 	}
 }
+
+
+void orderCorners(const vector<cv::Point>& p,
+		  cv::Point* tl, cv::Point* tr, cv::Point* bl, cv::Point* br)
+{
+	cv::Point dP0 = p[1] + p[2] + p[3] - 3*p[0];
+	cv::Point dP1 = p[0] + p[2] + p[3] - 3*p[1];
+	cv::Point dP2 = p[1] + p[0] + p[3] - 3*p[2];
+	cv::Point dP3 = p[1] + p[2] + p[0] - 3*p[3];
+	vector<cv::Point> dP{dP0, dP1, dP2, dP3};
+
+	for (uint8_t i = 0; i < 4; i++)
+	{
+		if      (dP[i].x >= 0 && dP[i].y > 0) *tl = p[i];
+		else if (dP[i].x > 0 && dP[i].y <= 0) *bl = p[i];
+		else if (dP[i].x <= 0 && dP[i].y > 0) *tr = p[i];
+		else if (dP[i].x < 0 && dP[i].y <= 0) *br = p[i];
+	}
+}
+
+
+
