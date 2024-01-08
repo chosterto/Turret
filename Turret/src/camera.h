@@ -19,12 +19,14 @@ using namespace std;
 
 typedef struct Aruco {
 
-	uint8_t id;
-	uint8_t size;
+	int id;
+	int rot;
+	int size;
 	double dim;
 	double searchRegionPercent;
 	double maxBlack;
 	double minWhite;
+	double maxCorrectionRate;
 
 	cv::Point2f corners[4];
 
@@ -57,6 +59,6 @@ void filterPoly(const vector< vector<cv::Point> >& points, vector< vector<cv::Po
 void orderCorners(const vector<cv::Point>& p, cv::Point* tl, cv::Point* tr, cv::Point* bl, cv::Point* br);
 
 
-bool verifyMarker(const cv::Mat& img, Aruco* aruco);
+bool verifyMarker(const cv::Mat& img, Aruco* aruco, cv::aruco::Dictionary* dict);
 
 #endif

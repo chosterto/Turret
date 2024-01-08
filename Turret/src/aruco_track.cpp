@@ -57,6 +57,7 @@ int main(int argc, char** argv)
 	marker.searchRegionPercent = 0.3;
 	marker.maxBlack = 110;
 	marker.minWhite = 140;
+	marker.maxCorrectionRate = 0.1;
 	cap.read(raw_frame);
 	findArUco(raw_frame, &marker);
 	/**

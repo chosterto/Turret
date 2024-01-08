@@ -79,6 +79,8 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 			marker_size = cv::aruco::DICT_4X4_250; break;
 	}
 
+	cv::aruco::Dictionary aruco_dict = cv::aruco::getPredefinedDictionary(marker_size);
+
 	cv::Mat thres, gs;
 	cv::cvtColor(img, gs, cv::COLOR_BGR2GRAY);
 	cv::adaptiveThreshold(
@@ -107,13 +109,17 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 		p_mat = cv::getPerspectiveTransform(corners, target);
 
 		cv::warpPerspective(gs, marker_img, p_mat, cv::Size(aruco->dim, aruco->dim));
-		//cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
-		//cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
-		//cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
-		//cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
-		//cv::imshow("img", marker_img);
-		//cv::waitKey(0);
-		verifyMarker(marker_img, aruco);
+
+		if (verifyMarker(marker_img, aruco, &aruco_dict))
+		{
+			cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
+			cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
+			cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
+			cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
+			cout << aruco->id << endl;
+			cv::imshow("img", img);
+			cv::waitKey(0);
+		}
 	}
 }
 
@@ -121,7 +127,7 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 void filterPoly(const vector< vector<cv::Point> >& points, vector< vector<cv::Point> >& candidates)
 {
 	vector<cv::Point> curve_f;
-	double ep = 1.5;
+	double ep = 1.6;
 	for (uint16_t i = 0; i < points.size(); i++)
 	{
 		if (cv::contourArea(points[i]) < 50) continue;
@@ -152,7 +158,7 @@ void orderCorners(const vector<cv::Point>& p,
 }
 
 
-bool verifyMarker(const cv::Mat& img, Aruco* aruco)
+bool verifyMarker(const cv::Mat& img, Aruco* aruco, cv::aruco::Dictionary* dict)
 {
 	cv::Mat bits(aruco->size, aruco->size, CV_8U), region;
 
@@ -177,9 +183,7 @@ bool verifyMarker(const cv::Mat& img, Aruco* aruco)
 		else
 			return false;
 	}
-	cout << bits << endl;
-	cv::imshow("img", img);
-	cv::waitKey(0);
-	return true;
+	//cout << bits << endl;
+	return dict->identify(bits, aruco->id, aruco->rot, aruco->maxCorrectionRate);
 }
 
