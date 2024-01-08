@@ -19,8 +19,7 @@ using namespace std;
 
 typedef struct Aruco {
 
-	int id;
-	int rot;
+	int id_prev, rot_prev;
 	int size;
 	double dim;
 	double searchRegionPercent;
@@ -28,7 +27,8 @@ typedef struct Aruco {
 	double minWhite;
 	double maxCorrectionRate;
 
-	cv::Point2f corners[4];
+	vector< vector<cv::Point>> corners;
+	vector<int> ids;
 
 } Aruco;
 

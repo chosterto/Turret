@@ -87,7 +87,8 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 		gs, thres, 40, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 13, 5
 	);
 
-	vector< vector<cv::Point> > contours, potential_markers;
+	vector<int> ids_;
+	vector< vector<cv::Point> > contours, potential_markers, corners_;
 	cv::findContours(thres, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 	filterPoly(contours, potential_markers);
 
@@ -98,8 +99,8 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 	{
 		orderCorners(potential_markers[i], &TL, &TR, &BL, &BR);
 
-		cv::Point2f corners[4] = {TL, TR, BL, BR};
-		cv::Point2f target[4] = {
+		vector<cv::Point2f> corners{TL, TR, BL, BR};
+		vector<cv::Point2f> target{
 			cv::Point(0, 0),
 			cv::Point(aruco->dim, 0),
 			cv::Point(0, aruco->dim),
@@ -112,15 +113,20 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 
 		if (verifyMarker(marker_img, aruco, &aruco_dict))
 		{
+			vector<cv::Point> corners_2i{TL, TR, BL, BR};
+			corners_.push_back(corners_2i);
+			ids_.push_back(aruco->id_prev);
+
 			cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
 			cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
 			cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
 			cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
-			cout << aruco->id << endl;
 			cv::imshow("img", img);
 			cv::waitKey(0);
 		}
 	}
+	aruco->corners = corners_;
+	aruco->ids = ids_;
 }
 
 
@@ -184,6 +190,6 @@ bool verifyMarker(const cv::Mat& img, Aruco* aruco, cv::aruco::Dictionary* dict)
 			return false;
 	}
 	//cout << bits << endl;
-	return dict->identify(bits, aruco->id, aruco->rot, aruco->maxCorrectionRate);
+	return dict->identify(bits, aruco->id_prev, aruco->rot_prev, aruco->maxCorrectionRate);
 }
 
