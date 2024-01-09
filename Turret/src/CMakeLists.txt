@@ -18,8 +18,7 @@ if (UNIX AND NOT APPLE)
 	)
 	add_executable(
 		turret_aruco
-		aruco_track.cpp
-		servo.cpp
+		aruco_detect.cpp
 		camera.cpp
 	)
 

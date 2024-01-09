@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <vector>
 
+#define MAX_WIDTH  640
+#define MAX_HEIGHT 480
 #define CENTER cv::Point(320, 240)
 #define CAMERA_PERIOD_SEC 0.03333
 
@@ -27,6 +29,7 @@ typedef struct Aruco {
 	double minWhite;
 	double maxCorrectionRate;
 
+	bool isDetected;
 	vector< vector<cv::Point>> corners;
 	vector<int> ids;
 
@@ -60,5 +63,9 @@ void orderCorners(const vector<cv::Point>& p, cv::Point* tl, cv::Point* tr, cv::
 
 
 bool verifyMarker(const cv::Mat& img, Aruco* aruco, cv::aruco::Dictionary* dict);
+
+
+void arucoInitialize(Aruco* aruco, int size_, double dim_, double region_,
+		     double maxB_, double minW_, double correction_);
 
 #endif

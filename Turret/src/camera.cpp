@@ -62,8 +62,25 @@ void distanceFromCenter(cv::Point* distance, const vector<cv::Point>& points)
 }
 
 
+void arucoInitialize(Aruco* aruco, int size_, double dim_, double region_,
+		     double maxB_, double minW_, double correction_)
+{
+	aruco->size = size_;
+
+	aruco->dim = (dim_ < MAX_HEIGHT) ? dim_ : MAX_HEIGHT;
+
+	aruco->searchRegionPercent = (abs(region_) < 1) ? region_ : region_ / abs(region_);
+
+	aruco->maxBlack = maxB_;
+	aruco->minWhite = minW_;
+
+	aruco->maxCorrectionRate = correction_;
+}
+
+
 void findArUco(const cv::Mat& img, Aruco* aruco)
 {
+	aruco->isDetected = false;
 	uint8_t marker_size;
 	switch(aruco->size)
 	{
@@ -113,16 +130,17 @@ void findArUco(const cv::Mat& img, Aruco* aruco)
 
 		if (verifyMarker(marker_img, aruco, &aruco_dict))
 		{
+			aruco->isDetected = true;
 			vector<cv::Point> corners_2i{TL, TR, BL, BR};
 			corners_.push_back(corners_2i);
 			ids_.push_back(aruco->id_prev);
 
-			cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
-			cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
-			cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
-			cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
-			cv::imshow("img", img);
-			cv::waitKey(0);
+			//cv::circle(img, TL, 2, cv::Scalar(255, 0, 0), 2);
+			//cv::circle(img, TR, 2, cv::Scalar(0, 255, 0), 2);
+			//cv::circle(img, BL, 2, cv::Scalar(0, 0, 255), 2);
+			//cv::circle(img, BR, 2, cv::Scalar(255, 0, 255), 2);
+			//cv::imshow("img", img);
+			//cv::waitKey(0);
 		}
 	}
 	aruco->corners = corners_;
@@ -177,7 +195,7 @@ bool verifyMarker(const cv::Mat& img, Aruco* aruco, cv::aruco::Dictionary* dict)
 			     bitSize*(i/aruco->size+1) + bitSize/2 * (1-aruco->searchRegionPercent));
 		cv::Point p2(bitSize*(i%aruco->size+1) + bitSize/2 * (1+aruco->searchRegionPercent),
 			     bitSize*(i/aruco->size+1) + bitSize/2 * (1+aruco->searchRegionPercent));
-		cv::rectangle(img, p1,p2, cv::Scalar(255,0,0), 2);
+		//cv::rectangle(img, p1,p2, cv::Scalar(255,0,0), 2);
 
 		region = img(cv::Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y));
 		avg = cv::mean(region)[0];
