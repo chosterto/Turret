@@ -72,7 +72,6 @@ int main(int argc, char** argv)
 		);
 	}
 
-	cv::imwrite("../../media/aruco_test_4x4.png", frame);
 	cv::imshow("img", frame);
 	cv::waitKey(0);
 	return 0;
