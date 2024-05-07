@@ -8,6 +8,7 @@ base_spacer_1-4mm.stp
 base_spacer_1-5mm.stp
 base_spacer_1-65mm.stp
 base_spacer_1-8mm.stp
+sensor_bracket_mirror.stp
 
 build/
 build_cv/
